@@ -1,0 +1,46 @@
+@model ChaVoV1.Models.RegistModel
+@{
+    ViewData["Title"] = "SignUp";
+}
+
+<form asp-controller="Account" asp-action="SignUp" asp-antiforgery="true">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="CenterForm">
+        <h1 class="text-center">SignUp</h1>
+        <div class="container list-group-item">
+            <div class="form-group">
+                <label asp-for="FirstName">FirstName*</label>
+                <input asp-for="FirstName" class="form-control"/>
+                <span asp-validation-for="FirstName"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LastName">LastName*</label>
+                <input asp-for="LastName" class="form-control"/>
+                <span asp-validation-for="LastName"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MiddleName">MiddleName</label>
+                <input asp-for="MiddleName" class="form-control"/>
+                <span asp-validation-for="MiddleName"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Login">Login*</label>
+                <input asp-for="Login" class="form-control"/>
+                <span asp-validation-for="Login"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password">Password</label>
+                <input asp-for="Password" class="form-control"/>
+                <span asp-validation-for="Password"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmPassoword">ConfirmPassoword</label>
+                <input asp-for="ConfirmPassoword" class="form-control"/>
+                <span asp-validation-for="ConfirmPassoword"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn form-control btn-dark btn-outline-dark" value="SingUp"/>
+            </div>
+        </div>
+    </div>
+</form>

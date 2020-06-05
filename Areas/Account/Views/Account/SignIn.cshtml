@@ -1,0 +1,25 @@
+@model ChaVoV1.Models.LoginModel
+@{
+    ViewData["Title"] = "SignIn";
+}
+<form asp-controller="Account" asp-action="SignIn" asp-antiforgery="true">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="CenterForm">
+        <h1 class="text-center">SignIn</h1>
+        <div class="container list-group-item">
+            <div class="form-group">
+                <label asp-for="Login">Login</label>
+                <input asp-for="Login" class="form-control"/>
+                <span asp-validation-for="Login"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password">Password</label>
+                <input asp-for="Password" class="form-control"/>
+                <span asp-validation-for="Password"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn form-control btn-dark btn-outline-dark" value="SignIn"/>
+            </div>
+        </div>
+    </div>
+</form>

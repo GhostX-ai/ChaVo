@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +31,14 @@ namespace ChaVoV1
         {
             services.AddDbContext<DataContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.LoginPath =
+                new Microsoft.AspNetCore.Http.PathString("/Account/SignIn/");
+                options.AccessDeniedPath = 
+                new Microsoft.AspNetCore.Http.PathString("/Home/Index");
+            });
             services.AddControllersWithViews();
         }
 
@@ -46,7 +57,8 @@ namespace ChaVoV1
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseRouting();
 
             app.UseAuthorization();
@@ -56,6 +68,11 @@ namespace ChaVoV1
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
+                endpoints.MapAreaControllerRoute(
+                    name: "Account",
+                    areaName: "Account",
+                    pattern: "{controller=Account}/{action=Index}/{id?}"
+                );
             });
         }
     }
