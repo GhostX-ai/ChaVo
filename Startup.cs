@@ -73,6 +73,11 @@ namespace ChaVoV1
                     areaName: "Account",
                     pattern: "{controller=Account}/{action=Index}/{id?}"
                 );
+                endpoints.MapAreaControllerRoute(
+                    name: "Admin",
+                    areaName: "Admin",
+                    pattern: "{controller=Question}/{action=Index}/{id?}"
+                );
             });
         }
     }
