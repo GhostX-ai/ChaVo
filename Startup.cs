@@ -71,7 +71,7 @@ namespace ChaVoV1
                 endpoints.MapAreaControllerRoute(
                     name: "Account",
                     areaName: "Account",
-                    pattern: "{controller=Account}/{action=Index}/{id?}"
+                    pattern: "{controller=Account}/{action=SignIn}/{id?}"
                 );
                 endpoints.MapAreaControllerRoute(
                     name: "Admin",

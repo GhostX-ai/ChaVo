@@ -3,10 +3,11 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ChaVoV1</title>
+    <title>@ViewData["Title"] - ChaVo</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/myStyle.css" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 </head>
 <body>
     <header>
@@ -25,12 +26,23 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Account" asp-controller="Account" asp-action="Index">Account</a>
+                        <li class="nav-item" id="AdminPanel">
                         </li>
                     </ul>
                 </div>
             </div>
+                <div>
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="img-profile rounded-circle" style="width: 25px; height: 25px;" src="/imgs/profile.jpg">
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" id="DropDown" aria-labelledby="userDropdown">
+                                
+                            </div>
+                        </li>
+                    </ul>
+                </div>
         </nav>
     </header>
     <div class="container">
@@ -41,10 +53,31 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - ChaVoV1 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2020 - ChaVo - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script>
+        $(document).ready(function ()
+        {
+            $.ajax("/Account/GetInfo/").done(function (data)
+            {
+                if(data.firstName != null)
+                {
+                    if(data.role == "Admin")
+                    {
+                        $("#AdminPanel").append("<a class='nav-link text-dark' href='/Question?area=Admin'>Admin panel</a>");
+                    }
+                    $("#DropDown").append('<a class="dropdown-item" href="/Account/Manage/"><i class="mr-2 text-gray-400"></i>Manage</a>');
+                    $("#DropDown").append('<a class="dropdown-item" href="/Account/SignOut/"><i class="mr-2 text-gray-400"></i>SignOut</a>');
+                }
+                else
+                {
+                    $("#DropDown").append('<a class="dropdown-item" href="/Account/SignIn/"><i class="mr-2 text-gray-400"></i>SignIn</a>');
+                    $("#DropDown").append('<a class="dropdown-item" href="/Account/SignUp/"><i class="mr-2 text-gray-400"></i>SignUp</a>');
+                }
+            });
+        });
+    </script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)

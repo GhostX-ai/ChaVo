@@ -7,24 +7,22 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ChaVoV1.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChaVoV1.Controllers
 {
     public class HomeController : Controller
     {
+        DataContext _context;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger,DataContext context)
         {
+            this._context = context;
             _logger = logger;
         }
 
         public IActionResult Index()
-        {
-            return View();
-        }
-        [Authorize]
-        public IActionResult Privacy()
         {
             return View();
         }

@@ -1,0 +1,44 @@
+@model List<ChaVoV1.Models.Question>
+@{
+    ViewData["Title"] = "Questions";
+}
+<div class="CenterForm">
+    <form asp-controller="Question" asp-action="List" asp-antiforgery="true">
+        <div asp-validation-summary="ModelOnly"></div>
+        <select name="id" class="form-group">
+            <option value="0">
+                All
+            </option>
+            @foreach (var x in ViewBag.Categories)
+            {
+                <option value="@x.Id">
+                    <b>@x.CategoryText</b>
+                </option>
+            }
+        </select>
+        <input type="submit" value="Ok" class="btn btn-primary"/>
+        <a asp-controller="Question" asp-action="Add" class="btn btn-success">Add new question</a>
+    </form>
+    <div class="row">
+        @foreach (var x in Model)
+        {
+            <div class="card container">
+                <div class="card-header">
+                    <b>@x.QuestionTitle</b>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-10">
+                            <p>@x.QuestionText</p>
+                        </div>
+                        <div class="col">
+                            <a asp-controller="Question" asp-action="Edit" asp-route-id="@x.Id" class="btn border-primary">Edit</a>
+                            <a asp-controller="Question" asp-action="Delete" asp-route-id="@x.Id" class="btn border-danger" onclick = "return confirm('Are you sure?')">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        }
+    </div>
+</div>

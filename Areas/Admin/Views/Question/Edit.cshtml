@@ -1,0 +1,36 @@
+@model ChaVoV1.Models.Question
+@{
+    ViewData["Title"] = Model.QuestionTitle;
+}
+
+<form asp-controller="Question" asp-action="Edit" asp-antiforgery="true">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="CenterForm">
+        <input type="hidden" asp-for="Id" value="@Model.Id"/>
+        <div class="form-group">
+            <label asp-for="QuestionTitle">QuestionTitle</label>
+            <input asp-for="QuestionTitle" value="@Model.QuestionTitle" class="form-control"/>
+            <span asp-validation-for="QuestionTitle"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="QuestionText">QuestionText</label>
+            <textarea asp-for="QuestionText"  class="form-control">@Model.QuestionText</textarea>
+            <span asp-validation-for="QuestionText"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Category">Category</label>
+            <select name="CategoryId" class="form-control">
+                @foreach(var x in ViewBag.Categories)
+                {
+                    <option value="@x.Id">
+                        <b>@x.CategoryText</b>
+                    </option>
+                }
+            </select>
+            <span asp-validation-for="Category"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary form-control" value="Edit" onclick = "return confirm('Are you sure?')"/>
+        </div>
+    </div>
+</form>

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using ChaVo.Models;
 
 namespace ChaVoV1.Models.Areas.Account.Controllers
 {
@@ -18,10 +19,6 @@ namespace ChaVoV1.Models.Areas.Account.Controllers
         public AccountController(DataContext context)
         {
             this._context = context;
-        }
-        public IActionResult Index()
-        {
-            return View();
         }
         public IActionResult SignIn()
         {
@@ -88,7 +85,19 @@ namespace ChaVoV1.Models.Areas.Account.Controllers
         public async Task<IActionResult> SignOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Home");
+        }
+
+        public JsonResult GetInfo()
+        {
+            var model = _context.Users.Include(u => u.Role).SingleOrDefault(u => u.Login == User.Identity.Name);
+            UserInfo ui = model == null ? new UserInfo() : new UserInfo()
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Role = model.Role.RoleText
+            };
+            return new JsonResult(ui);
         }
     }
 }

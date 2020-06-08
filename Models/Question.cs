@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace ChaVoV1.Models
@@ -11,10 +12,11 @@ namespace ChaVoV1.Models
         public string QuestionTitle { get; set; }
 
         [Required(ErrorMessage = "Question can not be empty!")]
-        [DataType(DataType.Text)]
+        [DataType(DataType.MultilineText)]
         public string QuestionText { get; set; }
 
         [Required(ErrorMessage = "Category can not be empty!")]
         public Category Category { get; set; }
+        public DateTime PubDate { get; set; }
     }
 }
