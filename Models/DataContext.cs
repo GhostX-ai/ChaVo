@@ -45,6 +45,15 @@ namespace ChaVoV1.Models
                     Id = 2,
                     RoleText = "Client"
                 });
+            model.Entity<User>().HasData(new User()
+            {
+                Id = Guid.NewGuid().ToString(),
+                FirstName = "Admin",
+                LastName = "Admin",
+                Login = "Admin",
+                Password = "1234",
+                Role = new Role() { Id = 1, RoleText = "Admin" }
+            });
         }
     }
 }

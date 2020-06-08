@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,7 +18,13 @@ namespace ChaVoV1
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
-            using(var scope = host.Services.CreateScope())
+            string path = Path.GetFullPath("wwwroot/log.txt");
+            if (!File.Exists(path))
+            {
+                var file = File.Create(Path.GetFullPath("wwwroot/log.txt"));
+                file.Close();
+            }
+            using (var scope = host.Services.CreateScope())
             {
                 var services = scope.ServiceProvider;
                 try
@@ -27,7 +34,8 @@ namespace ChaVoV1
                 }
                 catch (Exception ex)
                 {
-                    
+                    string text = DateTime.Now.ToShortDateString() + "-" + ex.Message.ToString() + "\n-----------------------------------------";
+                    File.WriteAllText(path, text);
                 }
             }
             host.Run();

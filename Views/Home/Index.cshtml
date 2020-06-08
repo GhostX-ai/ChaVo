@@ -1,1 +1,168 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="CenterForm">
+    <div class="row">
+        <div class="col-10">
+            <input type="text" id="searchText" class="form-control"/>
+        </div>
+        <div class="col">
+            <button id="searchBtn" class="btn btn-primary form-control">Search</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <select id="categories" class="form-control">
+            </select>
+        </div>
+        <div class="col">
+            <button id="category" class="btn btn-primary">Filter</button>
+        </div>
+    </div>
+    <div id="content">
+
+    </div>
+</div>
+
+<script>
+    $(document).ready(function()
+    {
+        var QuestTick = setInterval(Check,100);
+        var li = [];
+        var CategoryTick = setInterval(CheckCategory,100); 
+        var categories = [];
+        var searchAccess = true;
+        
+        function CheckCategory()
+        {
+            $.ajax('/Home/Categories/').done(function (data)
+            {
+                if(categories == null)
+                {
+                    categories = data;
+                    ShowCategory(categories);
+                }
+                else
+                {
+                    if(categories.length != data.length)
+                    {
+                        categories = data;
+                        ShowCategory(categories);
+                    }
+                    else
+                    {
+                        var access = false;
+                        for(var i = 0; i < data.length; i++)
+                        {
+                            if(categories[i].categoryText != data[i].categoryText)
+                            {
+                                access = true;
+                            }
+                        }
+                        if(access)
+                        {
+                            categories = data;
+                            ShowCategory(categories);
+                        }
+                    }
+                }
+            });
+        }
+
+        $("#category").click(function ()
+        {
+            var form = new FormData();
+            form.append("text", $("#categories").val());
+            var settings = {
+                "url": "https://localhost:5001/Home/Search/",
+                "method": "POST",
+                "processData": false,
+                "contentType": false,
+                "data": form
+            };
+            $.ajax(settings).done(function (response) {
+                li = response;
+                Show(li);
+                searchAccess = $("#categories").val() == 0 ? true : false;
+            });
+        });
+
+        function ShowCategory(data)
+        {
+            $("#categories").empty();
+            $("#categories").append('<option value="0">All</option>');
+            for(var i = 0; i < data.length;i++)
+            {
+                $("#categories").append('<option value="'+data[i].id+'">'+data[i].categoryText+'</option>');
+            }
+        }
+
+        $("#searchBtn").click(function ()
+        {
+            var form = new FormData();
+            form.append("text", $("#searchText").val());
+            var settings = {
+                "url": "https://localhost:5001/Home/Search/",
+                "method": "POST",
+                "processData": false,
+                "contentType": false,
+                "data": form
+            };
+            $.ajax(settings).done(function (response) {
+                li = response;
+                Show(li);
+                searchAccess = false;
+            });
+        });
+
+        function Check()
+        {
+            $.ajax('/Home/Questions/').done(function (data)
+            {
+                if(searchAccess)
+                {
+                if(li == null)
+                {
+                    li = data;
+                    Show(li);
+                }
+                else
+                {
+                    if(li.length != data.length)
+                    {
+                        li = data;
+                        Show(li);
+                    }
+                    else
+                    {
+                        var access = false;
+                        for(var i = 0; i < data.length;i++)
+                        {
+                            if(data[i].questionTitle != li[i].questionTitle || 
+                            data[i].questionText != li[i].questionText ||
+                            data[i].pubDate != li[i].pubDate)
+                            {
+                                access = true;
+                            }
+                            if(access)
+                            {
+                                li = data;
+                                Show(li);
+                            }
+                        }
+                    }
+                }
+                }
+            });
+        }
+        function Show(data)
+        {
+            $("#content").empty();
+            for(var i = 0; i < data.length;i++)
+            {
+                $("#content").append('<a class="nav-link text-dark" href="/Home/Question/'+data[i].id+'"><div class="card mb-4 border-0"><div class="card-text mb-4 border-0" style="background-color: transparent;"><i>'+data[i].pubDate+'</i><br><b>'+data[i].questionTitle+'</b><p class="LimitedLines">'+data[i].questionText+'</p></div></div></a>');
+            }
+        }
+    });
+</script>

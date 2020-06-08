@@ -1,0 +1,88 @@
+@model ChaVoV1.Models.Question
+
+@{
+    ViewData["Title"] = Model.QuestionTitle;
+}
+
+<div class="CenterForm card">
+    <input type="hidden" value="@Model.Id" id="Id"/>
+    <div class="card-header m-0 border-0">
+        <h1 class="text-center">@Model.QuestionTitle</h1>
+    </div>
+    <div class="card-body">
+        <p style="width: 100%;padding: 10px;margin: 0;">@Model.QuestionText</p>
+        <i>@Model.PubDate.ToShortDateString()</i>
+    </div>
+</div>
+
+<div class="CenterForm container">
+    <div class="form-group">
+        <div>
+            <textarea class="form-control list-group-item" id="answer" style="min-height: 100px; width: 100%;">
+
+            </textarea>
+        </div>
+        <div>
+            <button class="btn btn-primary form-control" id="leaveAnComment">Leave an answer</button>
+        </div>
+    </div>
+</div>
+
+<div class="CenterForm list-group-item">
+    <div class="" style="background-color: blue;">
+        <label style="color: white;">Answers</label>
+    </div>
+    <div id="answers">
+
+    </div>
+</div>
+<script>
+    $(document).ready(function ()
+    {
+        var tick = setInterval(Answers,100);
+        var li = [];
+        $("#leaveAnComment").click(function ()
+        {
+            var form = new FormData();
+            form.append("id", $("#Id").val());
+            form.append("text", $("#answer").val());
+            var settings = {
+                "url": "https://localhost:5001/Home/AddAnswer/",
+                "method": "POST",
+                "processData": false,
+                "contentType": false,
+                "data": form
+            };
+            $.ajax(settings);
+        });
+        function Answers()
+        {
+            $.ajax('/Home/Answers/'+$("#Id").val()).done(function (data)
+            {
+                if(li == null)
+                {
+                    li = data;
+                    Show(li);
+                }
+                else
+                {
+                    if(li.length != data.length)
+                    {
+                        li = data;
+                        Show(li);
+                    }
+                }
+            });
+        }
+        function Show(data)
+        {
+            $("#answers").empty();
+            console.log(data);
+            debugger;
+            for(var i = 0; i < data.length; i++)
+            {
+                $("#answers").append('<div class="card m-0 border-0"><div class="card-title m-0 border-0"><b>'+data[i].userName+'</b></div><div class="card-text">'+data[i].text+'</div></div>');
+            }
+        }
+    });
+</script>
