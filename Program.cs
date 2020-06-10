@@ -30,6 +30,7 @@ namespace ChaVoV1
                 try
                 {
                     var context = services.GetRequiredService<DataContext>();
+                    Seed.SeedData(context);
                     context.Database.Migrate();
                 }
                 catch (Exception ex)

@@ -1,0 +1,31 @@
+@model ChaVo.Models.ChangePasswordModel
+@{
+    ViewData["Title"]="Manage";
+}
+
+<h1>Change password</h1>
+<div class="CenterForm list-group-item">
+    <form asp-controller="Account" asp-action="Manage" asp-antiforgery="true">
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="container">
+            <div class="form-group">
+                <label asp-for="LastPassword">Last password</label>
+                <input asp-for="LastPassword" class="form-control"/>
+                <span asp-validation-for="LastPassword"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NewPassword">New password</label>
+                <input asp-for="NewPassword" class="form-control"/>
+                <span asp-validation-for="NewPassword"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmNewPassword">Confirm new password</label>
+                <input asp-for="ConfirmNewPassword" class="form-control"/>
+                <span asp-validation-for="ConfirmNewPassword"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="form-control btn btn-primary" value="Change"/> 
+            </div>
+        </div>
+    </form>
+</div>

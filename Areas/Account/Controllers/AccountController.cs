@@ -9,6 +9,8 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using ChaVo.Models;
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace ChaVoV1.Models.Areas.Account.Controllers
 {
@@ -29,6 +31,7 @@ namespace ChaVoV1.Models.Areas.Account.Controllers
         {
             if (ModelState.IsValid)
             {
+                model.Password = HashPassword(model.Password);
                 User user = await _context.Users.Include(p => p.Role).FirstOrDefaultAsync(u => u.Login == model.Login && u.Password == model.Password);
                 if (user != null)
                 {
@@ -53,6 +56,7 @@ namespace ChaVoV1.Models.Areas.Account.Controllers
                 User user = await _context.Users.FirstOrDefaultAsync(u => u.Login == model.Login);
                 if (user == null)
                 {
+                    model.Password = HashPassword(model.Password);
                     Guid id = Guid.NewGuid();
                     var role = await _context.Roles.FirstAsync(p => p.RoleText == "Client");
                     _context.Users.Add(new User()
@@ -82,10 +86,28 @@ namespace ChaVoV1.Models.Areas.Account.Controllers
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType);
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
+        public string HashPassword(string password)
+        {
+            byte[] salt = new byte[128 / 8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+            Console.WriteLine($"Salt: {Convert.ToBase64String(salt)}");
+
+            // derive a 256-bit subkey (use HMACSHA1 with 10,000 iterations)
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA1,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8));
+            return hashed;
+        }
         public async Task<IActionResult> SignOut()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
 
         public JsonResult GetInfo()
@@ -98,6 +120,16 @@ namespace ChaVoV1.Models.Areas.Account.Controllers
                 Role = model.Role.RoleText
             };
             return new JsonResult(ui);
+        }
+        public IActionResult Manage()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Manage(ChangePasswordModel model)
+        {
+
+            return RedirectToAction("Index", "Home");
         }
     }
 }
