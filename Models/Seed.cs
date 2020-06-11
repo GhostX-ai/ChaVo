@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using ChaVoV1.Models;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +24,7 @@ namespace ChaVoV1.Models
                     context.SaveChanges();
                     role = context.Roles.FirstOrDefault(p => p.RoleText == "Admin");
                 }
-                string password = HashPassword("1234");
+                string password = HashingPassword("1234");
                 context.Users.Add(new User()
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -36,23 +37,12 @@ namespace ChaVoV1.Models
                 context.SaveChanges();
             }
         }
-        static public string HashPassword(string password)
+        static public string HashingPassword(string password)
         {
-            byte[] salt = new byte[128 / 8];
-            using (var rng = RandomNumberGenerator.Create())
-            {
-                rng.GetBytes(salt);
-            }
-            Console.WriteLine($"Salt: {Convert.ToBase64String(salt)}");
-
-            // derive a 256-bit subkey (use HMACSHA1 with 10,000 iterations)
-            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA1,
-                iterationCount: 10000,
-                numBytesRequested: 256 / 8));
-            return hashed;
+            var data = Encoding.ASCII.GetBytes(password);
+            var md5 = new MD5CryptoServiceProvider();
+            var md5data = md5.ComputeHash(data);
+            return Convert.ToBase64String(md5data);
         }
     }
 }
