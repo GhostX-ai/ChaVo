@@ -20,7 +20,12 @@
             <button id="category" class="btn btn-primary">Filter</button>
         </div>
     </div>
-    <div id="content">
+    <div class="row" style="padding-top: 5px;min-height: 30px;max-height: 30px; background-color: #4771a9; font-size: small; color:white">
+        <div class="col-5">Title</div>
+        <div class="col">Publication date</div>
+        <div class="col">Number of response</div>
+    </div>
+    <div id="content" >
 
     </div>
 </div>
@@ -161,7 +166,7 @@
             $("#content").empty();
             for(var i = 0; i < data.length;i++)
             {
-                $("#content").append('<a class="nav-link text-dark" href="/Home/Question/'+data[i].id+'"><div class="card mb-4 border-0"><div class="card-text mb-4 border-0" style="background-color: transparent;"><i>'+data[i].pubDate+'</i><br><b>'+data[i].questionTitle+'</b><p class="LimitedLines">'+data[i].questionText+'</p></div></div></a>');
+                $("#content").append('<div class="row"><div class="col-5"><a class="nav-link" href="/Home/Question/'+data[i].id+'">'+data[i].title+'</a></div><div class="col">'+data[i].pubDate+'</div><div class="col">'+data[i].countOfAnswers+'</div></div>');
             }
         }
     });

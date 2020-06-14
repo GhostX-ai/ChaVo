@@ -7,13 +7,13 @@
     <div asp-validation-summary="ModelOnly"></div>
     <div class="CenterForm">
         <div class="form-group">
-            <label asp-for="QuestionTitle">QuestionTitle</label>
+            <label asp-for="QuestionTitle">Title</label>
             <input asp-for="QuestionTitle" class="form-control"/>
             <span asp-validation-for="QuestionTitle"></span>
         </div>
         <div class="form-group">
-            <label asp-for="QuestionText">QuestionText</label>
-            <textarea asp-for="QuestionText" class="form-control">
+            <label asp-for="QuestionText">Question</label>
+            <textarea style="min-height: 200px;" asp-for="QuestionText" class="form-control">
             </textarea>
             <span asp-validation-for="QuestionText"></span>
         </div>

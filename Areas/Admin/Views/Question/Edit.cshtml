@@ -8,13 +8,13 @@
     <div class="CenterForm">
         <input type="hidden" asp-for="Id" value="@Model.Id"/>
         <div class="form-group">
-            <label asp-for="QuestionTitle">QuestionTitle</label>
+            <label asp-for="QuestionTitle">Title</label>
             <input asp-for="QuestionTitle" value="@Model.QuestionTitle" class="form-control"/>
             <span asp-validation-for="QuestionTitle"></span>
         </div>
         <div class="form-group">
-            <label asp-for="QuestionText">QuestionText</label>
-            <textarea asp-for="QuestionText"  class="form-control">@Model.QuestionText</textarea>
+            <label asp-for="QuestionText">Question</label>
+            <textarea asp-for="QuestionText" style="min-height: 200px;" class="form-control">@Model.QuestionText</textarea>
             <span asp-validation-for="QuestionText"></span>
         </div>
         <div class="form-group">
@@ -31,6 +31,6 @@
         </div>
         <div class="form-group">
             <input type="submit" class="btn btn-primary form-control" value="Edit" onclick = "return confirm('Are you sure?')"/>
+            <a asp-controller="Question" asp-action="Delete" asp-route-id="@Model.Id" class="btn form-control border-danger" onclick = "return confirm('Are you sure?')">Delete</a>
         </div>
-    </div>
 </form>

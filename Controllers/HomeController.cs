@@ -53,7 +53,18 @@ namespace ChaVoV1.Controllers
         public JsonResult Questions()
         {
             var li = _context.Questions.OrderByDescending(p => p.PubDate).ToList();
-            return new JsonResult(li);
+            List<ShortDataQuestion> QuestionLi = new List<ShortDataQuestion>();
+            li.ForEach(q =>
+            {
+                QuestionLi.Add(new ShortDataQuestion()
+                {
+                    Id = q.Id,
+                    Title = q.QuestionTitle,
+                    PubDate = q.PubDate.ToShortDateString(),
+                    CountOfAnswers = _context.Answers.Where(a => a.Question == q).Count()
+                });
+            });
+            return new JsonResult(QuestionLi);
         }
 
         [HttpGet]
@@ -66,7 +77,7 @@ namespace ChaVoV1.Controllers
         [HttpGet]
         public JsonResult Answers(int id)
         {
-            var model = _context.Answers.Include(a => a.Question).Include(a => a.Writer).Where(a => a.Question.Id == id).ToList();
+            var model = _context.Answers.Include(a => a.Question).Include(a => a.Writer).Where(a => a.Question.Id == id).OrderByDescending(a => a).ToList();
             List<ShortData> li = new List<ShortData>();
             model.ForEach(a =>
             {
@@ -79,24 +90,29 @@ namespace ChaVoV1.Controllers
             return new JsonResult(li);
         }
         [HttpPost]
-        public void AddAnswer(ShortData model)
+        public string AddAnswer(ShortData model)
         {
-            try
+            if (User.Identity.IsAuthenticated)
             {
-                var QuestionModel = _context.Questions.Single(p => p.Id == model.id);
-                var UserModel = _context.Users.Single(p => p.Login == User.Identity.Name);
-                _context.Answers.Add(new Answer()
+                try
                 {
-                    AnswerText = model.text,
-                    Question = QuestionModel,
-                    Writer = UserModel
-                });
-                _context.SaveChanges();
+                    var QuestionModel = _context.Questions.Single(p => p.Id == model.id);
+                    var UserModel = _context.Users.Single(p => p.Login == User.Identity.Name);
+                    _context.Answers.Add(new Answer()
+                    {
+                        AnswerText = model.text,
+                        Question = QuestionModel,
+                        Writer = UserModel
+                    });
+                    _context.SaveChanges();
+                    return "Ok";
+                }
+                catch (Exception ex)
+                {
+                    return "Error";
+                }
             }
-            catch (Exception ex)
-            {
-
-            }
+            return "NotAuthed";
         }
 
         [HttpPost]
@@ -121,5 +137,12 @@ namespace ChaVoV1.Controllers
         public int id { get; set; }
         public string text { get; set; }
         public string UserName { get; set; }
+    }
+    public class ShortDataQuestion
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public string PubDate { get; set; }
+        public int CountOfAnswers { get; set; }
     }
 }

@@ -110,8 +110,15 @@ namespace ChaVoV1.Models.Areas.Account.Controllers
         [HttpPost]
         public IActionResult Manage(ChangePasswordModel model)
         {
-
-            return RedirectToAction("Index", "Home");
+            var user = _context.Users.First(u => u.Login == User.Identity.Name && Seed.HashingPassword(model.LastPassword) == u.Password);
+            if (user != null)
+            {
+                user.Password = Seed.HashingPassword(model.NewPassword);
+                _context.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
+            ModelState.AddModelError("","Password was not correct!");
+            return View();
         }
     }
 }

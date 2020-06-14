@@ -12,33 +12,44 @@
     <div class="card-body">
         <p style="width: 100%;padding: 10px;margin: 0;">@Model.QuestionText</p>
         <i>@Model.PubDate.ToShortDateString()</i>
-    </div>
-</div>
-
-<div class="CenterForm container">
-    <div class="form-group">
-        <div>
-            <textarea class="form-control list-group-item" id="answer" style="min-height: 100px; width: 100%;">
-
-            </textarea>
-        </div>
-        <div>
-            <button class="btn btn-primary form-control" id="leaveAnComment">Leave an answer</button>
+        <button style="float: right;" class="btn border-info" id="AddComment">Response</button>
+        <div id="contextAnswer">
+            <div>
+                <p>
+                    <textarea spellcheck="true" aria-multiselectable="false" class="scrollable form-control list-group-item" id="answer" style="min-height: 200px; width: 100%;max-height:300px;resize:none;"></textarea>
+                </p>
+            </div>
+            <div><button class="btn btn-primary form-control" id="leaveAnComment">Response</button></div>
         </div>
     </div>
 </div>
 
+        
+<div class="CenterForm text-center" style="background-color: #4771a9;border-top-left-radius: 10px;border-top-right-radius: 10px;">
+    <label style="color: white;" class="">Answers</label>
+</div>
 <div class="CenterForm list-group-item">
-    <div class="" style="background-color: blue;">
-        <label style="color: white;">Answers</label>
-    </div>
-    <div id="answers">
+    <div id="answers" class="pre-scrollable" style="max-height: 500px;">
 
     </div>
 </div>
 <script>
     $(document).ready(function ()
     {
+        var aces = true;
+        $("#contextAnswer").hide();
+        $("#AddComment").click(function ()
+        {
+            if(aces)
+            {
+                $("#contextAnswer").show();
+            }
+            else
+            {
+                $("#contextAnswer").hide();
+            }
+            aces = !aces;
+        });
         var tick = setInterval(Answers,100);
         var li = [];
         $("#leaveAnComment").click(function ()
@@ -53,7 +64,17 @@
                 "contentType": false,
                 "data": form
             };
-            $.ajax(settings);
+            $.ajax(settings).done(function (data)
+            {
+                if(data == "NotAuthed")
+                {
+                    alert("For responsing you have to signin or signup!");
+                }
+                else if(data == "Error")
+                {
+                    alert("There was an error!");
+                }
+            });
         });
         function Answers()
         {
@@ -77,11 +98,9 @@
         function Show(data)
         {
             $("#answers").empty();
-            console.log(data);
-            debugger;
             for(var i = 0; i < data.length; i++)
             {
-                $("#answers").append('<div class="card m-0 border-0"><div class="card-title m-0 border-0"><b>'+data[i].userName+'</b></div><div class="card-text">'+data[i].text+'</div></div>');
+                $("#answers").append('<div class="row border-primary"><div class="col-12"><b>'+data[i].userName+'</b><p>'+data[i].text+'<p></div></div>');
             }
         }
     });

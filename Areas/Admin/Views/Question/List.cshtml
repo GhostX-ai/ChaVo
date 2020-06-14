@@ -24,18 +24,7 @@
         {
             <div class="card container">
                 <div class="card-header">
-                    <b>@x.QuestionTitle</b>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-10">
-                            <p>@x.QuestionText</p>
-                        </div>
-                        <div class="col">
-                            <a asp-controller="Question" asp-action="Edit" asp-route-id="@x.Id" class="btn border-primary">Edit</a>
-                            <a asp-controller="Question" asp-action="Delete" asp-route-id="@x.Id" class="btn border-danger" onclick = "return confirm('Are you sure?')">Delete</a>
-                        </div>
-                    </div>
+                    <a class="nav-link" asp-controller="Question" asp-action="Edit" asp-route-id="@x.Id"><b>@x.QuestionTitle</b></a>
                 </div>
             </div>
             <br>
