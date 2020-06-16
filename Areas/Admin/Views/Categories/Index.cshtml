@@ -1,0 +1,25 @@
+@model List<ChaVoV1.Models.Category>
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <td>Category</td>
+            <td></td>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var x in Model)
+        {
+            <tr>
+                <td>@x.CategoryText</td>
+                <td>
+                    <a asp-controller="Categories" asp-action="Edit" asp-route-id="@x.Id">Edit</a>
+                    <a asp-controller="Categories" asp-action="Delete" asp-route-id="@x.Id" onclick = "return confirm('Are you sure?')">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

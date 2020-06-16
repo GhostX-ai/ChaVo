@@ -10,7 +10,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/js/jquery.cookie.js"></script>
 </head>
-<body>
+<body style="background-color: silver;">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
@@ -26,6 +26,9 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Question" asp-action="List">Questions</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Categories" asp-action="Index">Categories</a>
                         </li>
                     </ul>
                 </div>

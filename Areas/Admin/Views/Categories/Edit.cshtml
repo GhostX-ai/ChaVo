@@ -1,0 +1,19 @@
+@model ChaVoV1.Models.Category
+@{
+    ViewData["Title"] = Model.CategoryText;
+}
+
+<form asp-controller="Categories" asp-action="Edit" asp-antiforgery="true">
+    <div asp-validation-for="ModelOnly"></div>
+    <div class="container">
+        <input type="hidden" value="@Model.Id" asp-for="Id"/>
+        <div class="form-group">
+            <label asp-for="CategoryText">Name</label>
+            <input type="text" asp-for="CategoryText" class="form-control" value="@Model.CategoryText"/>
+            <span asp-validation-for="CategoryText"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Edit" onclick="return confirm('Are you sure?')" class="btn form-control"/>
+        </div>
+    </div>
+</form>
