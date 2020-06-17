@@ -81,16 +81,16 @@ namespace ChaVo.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            try
+            var model = await _context.Questions.SingleAsync(q => q.Id == id);
+            var li = await _context.Answers.Include(a => a.Question).Where(a=> a.Question.Id == id).ToListAsync();
+            foreach (var x in li)
             {
-                var model = await _context.Questions.SingleAsync(q => q.Id == id);
-                _context.Questions.Remove(model);
+                var answer = await _context.Answers.FirstAsync(c=>c.Id == x.Id);
+                _context.Answers.Remove(answer);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
-            {
-
-            }
+            _context.Questions.Remove(model);
+            await _context.SaveChangesAsync();
             return RedirectToAction("List");
         }
     }

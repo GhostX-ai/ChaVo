@@ -3,14 +3,9 @@
 }
 
 <div class="CenterForm">
-    <div class="row">
-        <div class="col-10">
-            <input type="text" id="searchText" class="form-control"/>
+        <div class="form-group">
+            <input type="text" placeholder="Search" id="searchText" class="form-control"/>
         </div>
-        <div class="col">
-            <button id="searchBtn" class="btn btn-primary form-control">Search</button>
-        </div>
-    </div>
     <div class="row">
         <div class="col">
             <select id="categories" class="form-control">
@@ -103,7 +98,7 @@
             }
         }
 
-        $("#searchBtn").click(function ()
+        $("#searchText").change(function ()
         {
             var form = new FormData();
             form.append("text", $("#searchText").val());

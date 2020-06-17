@@ -46,7 +46,28 @@ namespace ChaVoV1.Controllers
 
             }
             text = id == 0 ? null : text;
-            var li = text == null ? _context.Questions.OrderByDescending(p => p.PubDate).ToList() : _context.Questions.Include(q => q.Category).Where(q => q.QuestionText == text || q.QuestionTitle == text || q.Category.CategoryText == text || q.Category.Id == id).ToList();
+            // var li = text == null ? _context.Questions.OrderByDescending(p => p.PubDate).ToList() : _context.Questions.Include(q => q.Category).Where(q => q.QuestionText == text || q.QuestionTitle == text || q.Category.CategoryText == text || q.Category.Id == id).ToList();
+            List<Question> li = new List<Question>();
+            if(text == null)
+            {
+                li = _context.Questions.OrderByDescending(p=>p.PubDate).ToList();
+            }
+            else
+            {
+                var AllQuestions = _context.Questions.OrderByDescending(p=>p.PubDate).ToList();
+                foreach (var x in AllQuestions)
+                {
+                    var splitedText = x.QuestionTitle.Split(' ');
+                    for (int i = 0; i < splitedText.Length; i++)
+                    {
+                        if(splitedText[i] == text)
+                        {
+                            li.Add(x);
+                            break;
+                        }
+                    }
+                }
+            }
             List<ShortDataQuestion> QuestionLi = new List<ShortDataQuestion>();
             li.ForEach(q =>
             {
@@ -58,7 +79,7 @@ namespace ChaVoV1.Controllers
                     CountOfAnswers = _context.Answers.Where(a => a.Question == q).Count()
                 });
             });
-            return new JsonResult(li);
+            return new JsonResult(QuestionLi);
         }
 
         public JsonResult Questions()
