@@ -48,22 +48,32 @@ namespace ChaVoV1.Controllers
             text = id == 0 ? null : text;
             // var li = text == null ? _context.Questions.OrderByDescending(p => p.PubDate).ToList() : _context.Questions.Include(q => q.Category).Where(q => q.QuestionText == text || q.QuestionTitle == text || q.Category.CategoryText == text || q.Category.Id == id).ToList();
             List<Question> li = new List<Question>();
-            if(text == null)
+            if (text == null)
             {
-                li = _context.Questions.OrderByDescending(p=>p.PubDate).ToList();
+                li = _context.Questions.OrderByDescending(p => p.PubDate).ToList();
             }
             else
             {
-                var AllQuestions = _context.Questions.OrderByDescending(p=>p.PubDate).ToList();
+                var AllQuestions = _context.Questions.OrderByDescending(p => p.PubDate).ToList();
                 foreach (var x in AllQuestions)
                 {
                     var splitedText = x.QuestionTitle.Split(' ');
                     for (int i = 0; i < splitedText.Length; i++)
                     {
-                        if(splitedText[i] == text)
+                        if (splitedText[i].ToLower() == text.ToLower())
                         {
                             li.Add(x);
                             break;
+                        }
+                    }
+                }
+                if (id != -1)
+                {
+                    foreach (var x in _context.Questions.Include(q => q.Category).ToList())
+                    {
+                        if (x.Category.Id == id)
+                        {
+                            li.Add(x);
                         }
                     }
                 }

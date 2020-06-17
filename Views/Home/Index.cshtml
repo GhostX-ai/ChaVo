@@ -6,13 +6,9 @@
         <div class="form-group">
             <input type="text" placeholder="Search" id="searchText" class="form-control"/>
         </div>
-    <div class="row">
-        <div class="col">
+        <div class="form-group">
             <select id="categories" class="form-control">
             </select>
-        </div>
-        <div class="col">
-            <button id="category" class="btn btn-primary">Filter</button>
         </div>
     </div>
     <div class="row" style="padding-top: 5px;min-height: 30px;max-height: 30px; background-color: #4771a9; font-size: small; color:white">
@@ -70,7 +66,7 @@
             });
         }
 
-        $("#category").click(function ()
+        $("#categories").blur(function ()
         {
             var form = new FormData();
             form.append("text", $("#categories").val());
