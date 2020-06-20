@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ChaVo.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize("Admin")]
     public class AdminHelper : Controller
     {
 
